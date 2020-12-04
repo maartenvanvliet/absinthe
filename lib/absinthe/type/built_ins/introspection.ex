@@ -52,9 +52,10 @@ defmodule Absinthe.Type.BuiltIns.Introspection do
 
     field :description, :string
 
-    field :is_repeatable, :boolean, resolve: fn _, %{source: source} ->
+    field :is_repeatable, :boolean,
+      resolve: fn _, %{source: source} ->
         {:ok, source.repeatable}
-    end
+      end
 
     field :args,
       type: list_of(:__inputvalue),

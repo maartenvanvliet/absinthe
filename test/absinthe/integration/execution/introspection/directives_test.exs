@@ -38,7 +38,7 @@ defmodule Elixir.Absinthe.Integration.Execution.Introspection.DirectivesTest do
                       "onField" => true,
                       "onFragment" => true,
                       "onOperation" => false,
-                      "isRepeatable" => false,
+                      "isRepeatable" => false
                     },
                     %{
                       "args" => [
@@ -55,7 +55,7 @@ defmodule Elixir.Absinthe.Integration.Execution.Introspection.DirectivesTest do
                       "onField" => true,
                       "onFragment" => true,
                       "onOperation" => false,
-                      "isRepeatable" => false,
+                      "isRepeatable" => false
                     }
                   ]
                 }
