@@ -912,6 +912,20 @@ defmodule Absinthe.Schema.Notation do
     |> record_expand!(func_ast)
   end
 
+  @placement {:repeatable, [under: [:directive]]}
+  @doc """
+  Define the expansion for a directive
+
+  ## Placement
+
+  #{Utils.placement_docs(@placement)}
+  """
+  defmacro repeatable(func_ast) do
+    __CALLER__
+    |> recordable!(:repeatable, @placement[:repeatable])
+    |> record_expand!(func_ast)
+  end
+
   # INPUT OBJECTS
 
   @placement {:input_object, [toplevel: true]}
