@@ -34,8 +34,6 @@ defmodule Absinthe.Phase.Document.Validation.RepeatableDirectives do
   end
 
   defp check_directives(node) do
-    placement = Blueprint.Directive.placement(node)
-
     directives =
       for directive <- node.directives do
         case directive do
