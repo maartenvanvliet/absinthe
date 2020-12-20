@@ -30,6 +30,16 @@ defmodule Absinthe.Type.DeprecationTest do
 
       field :address, :string, deprecate: true
     end
+
+    enum :colors do
+      value :red, deprecate: true
+      value :blue, deprecate: "This isn't supported"
+    end
+
+    input_object :contact_input do
+      field :email, non_null(:string), deprecate: true
+      field :name, non_null(:string), deprecate: "This isn't supported"
+    end
   end
 
   describe "fields" do
@@ -49,6 +59,26 @@ defmodule Absinthe.Type.DeprecationTest do
       assert "Not explicit enough" == field.args.size.deprecation.reason
       assert Type.deprecated?(field.args.source)
       assert nil == field.args.source.deprecation.reason
+    end
+  end
+
+  describe "enum values" do
+    test "can be deprecated" do
+      enum_values = TestSchema.__absinthe_type__(:colors).values
+      assert Type.deprecated?(enum_values.blue)
+      assert "This isn't supported" == enum_values.blue.deprecation.reason
+      assert Type.deprecated?(enum_values.red)
+      assert nil == enum_values.red.deprecation.reason
+    end
+  end
+
+  describe "input fields values" do
+    test "can be deprecated" do
+      input = TestSchema.__absinthe_type__(:contact_input)
+      assert Type.deprecated?(input.fields.name)
+      assert "This isn't supported" == input.fields.name.deprecation.reason
+      assert Type.deprecated?(input.fields.email)
+      assert nil == input.fields.email.deprecation.reason
     end
   end
 end
