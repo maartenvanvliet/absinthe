@@ -6,21 +6,23 @@ defmodule Absinthe.Formatter do
 
   ## Example
 
-      Absinthe.Formatter.format("{ version }")
-      "{\n  version\n}\n"
-
+  ```elixir
+  Absinthe.Formatter.format("{ version }")
+  "{\n  version\n}\n"
+  ```
 
   From Elixir 1.13 onwards the Absinthe.Formatter can be added to
   the formatter as a plugin:
 
-      # .formatter.exs
-      [
-        # Define the desired plugins
-        plugins: [Absinthe.Formatter],
-        # Remember to update the inputs list to include the new extensions
-        inputs: ["{mix,.formatter}.exs", "{config,lib,test}/**/*.{ex,exs}", "{lib, priv}/**/*.{gql,graphql}"]
-      ]
-
+  ```
+  # .formatter.exs
+  [
+    # Define the desired plugins
+    plugins: [Absinthe.Formatter],
+    # Remember to update the inputs list to include the new extensions
+    inputs: ["{mix,.formatter}.exs", "{config,lib,test}/**/*.{ex,exs}", "{lib, priv}/**/*.{gql,graphql}"]
+  ]
+  ```
   """
 
   def features(_opts) do

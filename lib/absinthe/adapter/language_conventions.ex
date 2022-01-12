@@ -10,7 +10,7 @@ defmodule Absinthe.Adapter.LanguageConventions do
 
   For example, this document:
 
-  ```
+  ```graphql
   {
     myUser: createUser(userId: 2) {
       firstName
@@ -30,7 +30,7 @@ defmodule Absinthe.Adapter.LanguageConventions do
   (snakecase) schema would have its names transformed back into camelcase on the
   way out:
 
-  ```
+  ```elixir
   %{
     data: %{
       "myUser" => %{

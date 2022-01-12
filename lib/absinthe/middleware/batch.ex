@@ -4,7 +4,7 @@ defmodule Absinthe.Middleware.Batch do
 
   ## Motivation
   Consider the following graphql query:
-  ```
+  ```graphql
   {
     posts {
       author {
