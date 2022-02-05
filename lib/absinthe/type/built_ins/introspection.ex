@@ -3,6 +3,10 @@ defmodule Absinthe.Type.BuiltIns.Introspection do
 
   use Absinthe.Schema.Notation
 
+  def __absinthe_schema_middleware__(_, middleware, _field, _object) do
+    middleware
+  end
+
   object :__schema do
     description "Represents a schema"
 

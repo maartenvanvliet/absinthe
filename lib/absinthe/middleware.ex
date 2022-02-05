@@ -304,14 +304,8 @@ defmodule Absinthe.Middleware do
       |> Absinthe.Schema.Notation.__ensure_middleware__(field, object)
 
     case middleware do
-      [{:ref, Absinthe.Phase.Schema.Introspection, _}] ->
-        expanded
-
-      [{:ref, Absinthe.Type.BuiltIns.Introspection, _}] ->
-        expanded
-
-      [{:ref, Absinthe.Phase.Schema.DeprecatedDirectiveFields, _}] ->
-        expanded
+      [{:ref, module, _} | _] ->
+        module.__absinthe_schema_middleware__(schema, expanded, field, object)
 
       _ ->
         schema.middleware(expanded, field, object)

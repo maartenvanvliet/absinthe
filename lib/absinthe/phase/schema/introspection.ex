@@ -16,6 +16,10 @@ defmodule Absinthe.Phase.Schema.Introspection do
     [{{Absinthe.Resolution, :call}, resolve_fn(identifier)}]
   end
 
+  def __absinthe_schema_middleware__(_, middleware, _field, _object) do
+    middleware
+  end
+
   def run(blueprint, _opts) do
     blueprint = attach_introspection_fields(blueprint)
     {:ok, blueprint}

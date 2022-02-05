@@ -30,6 +30,10 @@ defmodule Absinthe.Phase.Schema.DeprecatedDirectiveFields do
     node
   end
 
+  def __absinthe_schema_middleware__(_, middleware, _field, _object) do
+    middleware
+  end
+
   object :deprecated_directive_fields do
     field :on_operation, :boolean do
       deprecate "Check `locations` field for enum value OPERATION"

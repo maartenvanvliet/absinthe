@@ -1948,6 +1948,10 @@ defmodule Absinthe.Schema.Notation do
         unquote(Macro.escape(blueprint, unquote: true))
       end
 
+      def __absinthe_schema_middleware__(schema, middleware, field, object) do
+        schema.middleware(middleware, field, object)
+      end
+
       unquote_splicing(functions)
     end
   end
