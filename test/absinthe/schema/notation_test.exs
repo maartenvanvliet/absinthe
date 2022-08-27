@@ -630,6 +630,18 @@ defmodule Absinthe.Schema.NotationTest do
     )
   end
 
+  test "union types are identifiers" do
+    assert_notation_error(
+      "InvalidUnionType",
+      """
+      union :my_union do
+        types [:boolean, list_of(:id)]
+      end
+      """,
+      "Invalid schema notation in `types/1`: \"{:list_of, [line: 651], [:id]}\" must be an object identifier"
+    )
+  end
+
   defmodule WithFeatureDirective do
     use Absinthe.Schema.Prototype
 

@@ -1730,7 +1730,16 @@ defmodule Absinthe.Schema.Notation do
   @doc false
   # Record a list of member types for a union in the current scope
   def record_types!(env, types) do
-    put_attr(env.module, {:types, types})
+    Enum.each(types, &record_type!(env, &1))
+  end
+
+  def record_type!(env, type) when is_atom(type) do
+    put_attr(env.module, {:type, type})
+  end
+
+  def record_type!(_env, type) do
+    raise Absinthe.Schema.Notation.Error,
+          "Invalid schema notation in `types/1`: \"#{inspect(type)}\" must be an object identifier"
   end
 
   @doc false
