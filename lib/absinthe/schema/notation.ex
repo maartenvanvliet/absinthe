@@ -498,10 +498,19 @@ defmodule Absinthe.Schema.Notation do
       |> Keyword.delete(:directives)
       |> Keyword.delete(:args)
       |> Keyword.delete(:meta)
+      |> Keyword.update(:type, nil, &handle_type/1)
       |> Keyword.update(:description, nil, &wrap_in_unquote/1)
       |> Keyword.update(:default_value, nil, &wrap_in_unquote/1)
 
     {attrs, block}
+  end
+
+  defp handle_type(type) when is_atom(type) do
+    %Absinthe.Blueprint.TypeReference.Identifier{id: type}
+  end
+
+  defp handle_type(%{of_type: type} = type_reference) do
+    %{type_reference | of_type: handle_type(type)}
   end
 
   # FIELDS
@@ -744,7 +753,7 @@ defmodule Absinthe.Schema.Notation do
   ```
   """
   defmacro arg(identifier, type, attrs) do
-    {attrs, block} = handle_arg_attrs(identifier, type, attrs)
+    {attrs, block} = handle_arg_attrs(identifier, Keyword.put(attrs, :type, type), __CALLER__)
 
     __CALLER__
     |> recordable!(:arg, @placement[:arg])
@@ -757,7 +766,7 @@ defmodule Absinthe.Schema.Notation do
   See `arg/3`
   """
   defmacro arg(identifier, attrs) when is_list(attrs) do
-    {attrs, block} = handle_arg_attrs(identifier, nil, attrs)
+    {attrs, block} = handle_arg_attrs(identifier, attrs, __CALLER__)
 
     __CALLER__
     |> recordable!(:arg, @placement[:arg])
@@ -765,7 +774,7 @@ defmodule Absinthe.Schema.Notation do
   end
 
   defmacro arg(identifier, type) do
-    {attrs, block} = handle_arg_attrs(identifier, type, [])
+    {attrs, block} = handle_arg_attrs(identifier, [type: type], __CALLER__)
 
     __CALLER__
     |> recordable!(:arg, @placement[:arg])
@@ -1557,15 +1566,16 @@ defmodule Absinthe.Schema.Notation do
   defp reason(msg) when is_binary(msg), do: [reason: msg]
   defp reason(msg), do: raise(ArgumentError, "Invalid reason: #{msg}")
 
-  def handle_arg_attrs(identifier, type, raw_attrs) do
+  def handle_arg_attrs(identifier, raw_attrs, caller) do
     block = block_from_directive_attrs(raw_attrs)
 
     attrs =
       raw_attrs
+      |> expand_ast(caller)
       |> Keyword.put_new(:name, to_string(identifier))
-      |> Keyword.put_new(:type, type)
       |> Keyword.delete(:directives)
       |> Keyword.delete(:deprecate)
+      |> Keyword.update(:type, nil, &handle_type/1)
       |> Keyword.update(:description, nil, &wrap_in_unquote/1)
       |> Keyword.update(:default_value, nil, &wrap_in_unquote/1)
 
@@ -1734,6 +1744,7 @@ defmodule Absinthe.Schema.Notation do
   end
 
   def record_type!(env, type) when is_atom(type) do
+    type = %Absinthe.Blueprint.TypeReference.Identifier{id: type}
     put_attr(env.module, {:type, type})
   end
 

@@ -70,7 +70,8 @@ defmodule Absinthe.Phase.Schema.Validation.TypeReferencesExist do
     Blueprint.Schema.SchemaDeclaration,
     Blueprint.TypeReference.NonNull,
     Blueprint.TypeReference.ListOf,
-    Absinthe.Blueprint.TypeReference.Name
+    Blueprint.TypeReference.Name,
+    Blueprint.TypeReference.Identifier
   ]
   def validate_types(%struct{} = type, _) when struct in @no_types do
     type
@@ -102,6 +103,10 @@ defmodule Absinthe.Phase.Schema.Validation.TypeReferencesExist do
 
   defp unwrap(%Absinthe.Blueprint.TypeReference.Name{name: name}) do
     name
+  end
+
+  defp unwrap(%Absinthe.Blueprint.TypeReference.Identifier{id: id}) do
+    id
   end
 
   defp unwrap(type) do
