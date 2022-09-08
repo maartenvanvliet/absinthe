@@ -28,7 +28,8 @@ defmodule Absinthe.Phase.Schema.Validation.ObjectInterfacesMustBeValid do
               Blueprint.Schema.ObjectTypeDefinition,
               Blueprint.Schema.InterfaceTypeDefinition
             ] do
-    check_transitive_interfaces(object, object.interfaces, all_interfaces, nil, [])
+    object_interfaces = Enum.map(object.interfaces, & &1.id)
+    check_transitive_interfaces(object, object_interfaces, all_interfaces, nil, [])
   end
 
   defp validate_objects(type, _) do
@@ -46,11 +47,13 @@ defmodule Absinthe.Phase.Schema.Validation.ObjectInterfacesMustBeValid do
        ) do
     current_interface = all_interfaces[object_interface]
 
-    if current_interface && current_interface.identifier in object.interfaces do
+    object_interfaces = Enum.map(object.interfaces, & &1.id)
+
+    if current_interface && current_interface.identifier in object_interfaces do
       case current_interface do
         %{interfaces: interfaces} = interface ->
           # to prevent walking in cycles we need to filter out visited interfaces
-          interfaces = Enum.filter(interfaces, &(&1 not in visited))
+          interfaces = interfaces |> Enum.map(& &1.id) |> Enum.filter(&(&1 not in visited))
 
           check_transitive_interfaces(object, tail ++ interfaces, all_interfaces, interface, [
             object_interface | visited
@@ -93,7 +96,7 @@ defmodule Absinthe.Phase.Schema.Validation.ObjectInterfacesMustBeValid do
 
   def explanation(%{object: obj, interface: interface, implemented_by: nil}) do
     """
-    Type "#{obj}" must implement interface type "#{interface}"
+    Type "#{obj}" must implement interface type "#{inspect(interface)}"
 
     #{@description}
     """

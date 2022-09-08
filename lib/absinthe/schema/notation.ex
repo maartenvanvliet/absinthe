@@ -1717,10 +1717,8 @@ defmodule Absinthe.Schema.Notation do
   @doc false
   # Record an implemented interface in the current scope
   def record_interface!(env, identifier) do
+    identifier = %Absinthe.Blueprint.TypeReference.Identifier{id: identifier}
     put_attr(env.module, {:interface, identifier})
-    # Scope.put_attribute(env.module, :interfaces, identifier, accumulate: true)
-    # Scope.recorded!(env.module, :attr, :interface)
-    # :ok
   end
 
   @doc false
@@ -1749,8 +1747,10 @@ defmodule Absinthe.Schema.Notation do
   end
 
   def record_type!(_env, type) do
+    type = Macro.to_string(type)
+
     raise Absinthe.Schema.Notation.Error,
-          "Invalid schema notation in `types/1`: \"#{inspect(type)}\" must be an object identifier"
+          "Invalid schema notation in `types/1`: #{inspect(type)} must be an object identifier"
   end
 
   @doc false

@@ -638,7 +638,7 @@ defmodule Absinthe.Schema.NotationTest do
         types [:boolean, list_of(:id)]
       end
       """,
-      "Invalid schema notation in `types/1`: \"{:list_of, [line: 651], [:id]}\" must be an object identifier"
+      "Invalid schema notation in `types/1`: \"list_of(:id)\" must be an object identifier"
     )
   end
 
